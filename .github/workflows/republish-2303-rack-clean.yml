@@ -1,0 +1,42 @@
+name: Republish SG-Gateway 23.03 clean rack Cascade
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/republish-2303-rack-clean.yml
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      SOURCE_URL: "https://sdmntprdenmarkeast.oaiusercontent.com/files/00000000-6990-8210-9ff5-18796241dc91/raw?se=2026-09-29T20%3A14%3A35Z&sp=r&sv=2026-02-06&sr=b&scid=4b29902c-20bc-56b3-8a7c-e2df8e3afcc8&skoid=d294dba5-36f7-432b-aab8-935656489847&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-29T04%3A30%3A19Z&ske=2026-09-30T04%3A30%3A19Z&sks=b&skv=2026-02-06&sig=ikQKKyVVoPMEHyKheieCwmTeuJr2n3vPczoWzNAleHg%3D"
+      TAG: "v0.1.0-023.03"
+      RUN_FILE: "SG-Gateway-0.1.0-023.03-FULL.run"
+      SHA_FILE: "SG-Gateway-0.1.0-023.03-FULL-SHA256.txt"
+      TRANSFER_FILE: "SG-Gateway-0.1.0-023.03-FULL-TRANSFER.zip"
+    steps:
+      - name: Download verified private build artifact
+        run: |
+          set -euo pipefail
+          curl -fL "$SOURCE_URL" -o release-artifact.zip
+          unzip -q release-artifact.zip
+          sha256sum -c "$SHA_FILE"
+          bash "$RUN_FILE" --verify-only
+
+      - name: Replace release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release upload "$TAG" "$RUN_FILE" "$SHA_FILE" "$TRANSFER_FILE" --repo "$GITHUB_REPOSITORY" --clobber
+
+      - name: Refresh release notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --notes "Official SG-Gateway 23.03 release package. Built from private source SHA b80b730074dff06904a0db26a01b4881665eaecb. Protected runtime payload; SHA-256 verified before publication."
