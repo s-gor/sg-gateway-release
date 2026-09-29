@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -Eeuo pipefail
 
-echo "[SG-Gateway] Public release channel is not published yet."
-echo "[SG-Gateway] Full Uninstall bootstrap is temporarily unavailable from this repository."
-exit 1
+UNINSTALLER="/opt/sg-gateway/deploy/full-uninstall-ubuntu.sh"
+[[ -f "$UNINSTALLER" ]] || { echo "[SG-Gateway] Installed uninstaller not found: $UNINSTALLER" >&2; exit 1; }
+exec bash "$UNINSTALLER"
