@@ -13,7 +13,7 @@ Release assets:
 - `SG-Gateway-0.1.0-023.03-FULL-SHA256.txt`
 - `SG-Gateway-0.1.0-023.03-FULL-TRANSFER.zip`
 
-Source provenance: private build SHA `b1acf346bdc2252b983858a652006d478fc1300c`.
+Source provenance: private build SHA `7588dc220c0d3fe15a836659a91e24e35dd247ac`.
 
 The public package contains a protected Python runtime payload rather than readable application Python source. Runtime files and the release package are SHA-256 verified before installation.
 
@@ -39,6 +39,6 @@ curl -4 -fsSL https://raw.githubusercontent.com/s-gor/sg-gateway-release/main/un
 
 SHA-256 for `SG-Gateway-0.1.0-023.03-FULL.run`:
 
-`758753019a10570de1da3bb0d1d5e6d5350125adbe9fa7bbc211972a6d867e87`
+`fcb007eed7f9a43a5a3f1049d0d194c6d7a6f8e346d805ca11aef5806b15a233`
 
 The bootstrap verifies this checksum and runs the package's internal `--verify-only` check before installation.
