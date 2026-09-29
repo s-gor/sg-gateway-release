@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "[SG-Gateway] TEST RELEASE"
+echo "[SG-Gateway] Public release channel works."
+echo "[SG-Gateway] No files were installed or changed."
+echo "[SG-Gateway] TEST=PASS"
+exit 0
