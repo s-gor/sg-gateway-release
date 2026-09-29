@@ -3,7 +3,7 @@ set -Eeuo pipefail
 
 RELEASE_TAG="v0.1.0-023.03"
 RUN_FILE="SG-Gateway-0.1.0-023.03-FULL.run"
-EXPECTED_SHA256="1128f2384e13bfdbb7333ff1776304d4a3e56e7ae8e5c3ebed2603e4c3722c87"
+EXPECTED_SHA256="758753019a10570de1da3bb0d1d5e6d5350125adbe9fa7bbc211972a6d867e87"
 DOWNLOAD_URL="https://github.com/s-gor/sg-gateway-release/releases/download/v0.1.0-023.03/SG-Gateway-0.1.0-023.03-FULL.run"
 
 [[ -f /opt/sg-gateway/VERSION ]] || { echo "[SG-Gateway] Existing installation not found. Use Clean Install."; exit 1; }
