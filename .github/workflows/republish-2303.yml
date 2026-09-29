@@ -1,0 +1,35 @@
+name: Republish SG-Gateway 23.03 retry fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/republish-2303.yml
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      SOURCE_URL: "https://sdmntprdenmarkeast.oaiusercontent.com/files/00000000-a3bc-8210-aa9d-4460138dceb5/raw?se=2026-09-29T10%3A47%3A12Z&sp=r&sv=2026-02-06&sr=b&scid=b0cfdb5f-ccc4-5461-9d0e-8c15ae80215c&skoid=d294dba5-36f7-432b-aab8-935656489847&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-29T06%3A57%3A51Z&ske=2026-09-30T06%3A57%3A51Z&sks=b&skv=2026-02-06&sig=jZK5E4tnFXBwfkoZpRjPIX0PDYN73o3r2ujb0ldJrgk%3D"
+      TAG: "v0.1.0-023.03"
+      RUN_FILE: "SG-Gateway-0.1.0-023.03-FULL.run"
+      SHA_FILE: "SG-Gateway-0.1.0-023.03-FULL-SHA256.txt"
+      TRANSFER_FILE: "SG-Gateway-0.1.0-023.03-FULL-TRANSFER.zip"
+    steps:
+      - name: Download verified private build artifact
+        run: |
+          set -euo pipefail
+          curl -fL "$SOURCE_URL" -o release-artifact.zip
+          unzip -q release-artifact.zip
+          sha256sum -c "$SHA_FILE"
+          bash "$RUN_FILE" --verify-only
+
+      - name: Replace release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release upload "$TAG" "$RUN_FILE" "$SHA_FILE" "$TRANSFER_FILE"             --repo "$GITHUB_REPOSITORY"             --clobber
