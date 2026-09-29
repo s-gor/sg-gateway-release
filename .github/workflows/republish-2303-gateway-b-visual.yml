@@ -33,3 +33,10 @@ jobs:
         run: |
           set -euo pipefail
           gh release upload "$TAG" "$RUN_FILE" "$SHA_FILE" "$TRANSFER_FILE" --repo "$GITHUB_REPOSITORY" --clobber
+
+      - name: Refresh release notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --notes "Official SG-Gateway 23.03 release package. Built from private source SHA e27d314b2be58213e0a440ec9962c4933caa0480. Protected runtime payload; SHA-256 verified before publication."
