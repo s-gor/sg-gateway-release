@@ -3,7 +3,7 @@ set -Eeuo pipefail
 
 RELEASE_TAG="v0.1.0-023.03"
 RUN_FILE="SG-Gateway-0.1.0-023.03-FULL.run"
-EXPECTED_SHA256="692bcd18e423cf6732f3f61f47688dccff95abab1dac9be5c70388dc19991981"
+EXPECTED_SHA256="1ad66cad99b85dafda4f8998391f215c7294643605f0dedfce2213eac2f4e5f1"
 DOWNLOAD_URL="https://github.com/s-gor/sg-gateway-release/releases/download/v0.1.0-023.03/SG-Gateway-0.1.0-023.03-FULL.run"
 
 TMP="$(mktemp "/tmp/sg-gateway-install.XXXXXX.run")"
