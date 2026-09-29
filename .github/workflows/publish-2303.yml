@@ -1,0 +1,41 @@
+name: Publish SG-Gateway 23.03
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-2303.yml
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      SOURCE_URL: "https://sdmntprpolandcentral.oaiusercontent.com/files/00000000-84c8-820a-ac93-7d80ca07f913/raw?se=2026-09-29T10%3A33%3A01Z&sp=r&sv=2026-02-06&sr=b&scid=682399cc-6c95-5535-8bbe-80c2c0ff013e&skoid=d294dba5-36f7-432b-aab8-935656489847&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-29T05%3A29%3A02Z&ske=2026-09-30T05%3A29%3A02Z&sks=b&skv=2026-02-06&sig=VK6XmU6QPsPWmil6znchdwfGYDnqMxIa7ZYoG9QHAfs%3D"
+      TAG: "v0.1.0-023.03"
+      RUN_FILE: "SG-Gateway-0.1.0-023.03-FULL.run"
+      SHA_FILE: "SG-Gateway-0.1.0-023.03-FULL-SHA256.txt"
+      TRANSFER_FILE: "SG-Gateway-0.1.0-023.03-FULL-TRANSFER.zip"
+    steps:
+      - name: Download verified private build artifact
+        run: |
+          set -euo pipefail
+          curl -fL "$SOURCE_URL" -o release-artifact.zip
+          unzip -q release-artifact.zip
+          ls -lh "$RUN_FILE" "$SHA_FILE" "$TRANSFER_FILE"
+
+      - name: Verify release package
+        run: |
+          set -euo pipefail
+          sha256sum -c "$SHA_FILE"
+          bash "$RUN_FILE" --verify-only
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release delete "$TAG" --repo "$GITHUB_REPOSITORY" --yes >/dev/null 2>&1 || true
+          gh release create "$TAG"             "$RUN_FILE"             "$SHA_FILE"             "$TRANSFER_FILE"             --repo "$GITHUB_REPOSITORY"             --title "SG-Gateway 23.03"             --notes "Official SG-Gateway 23.03 release package. Built from private source SHA 592cb41bdd1bdb8994af66fc3a07efee5da1ab36. Protected runtime payload; SHA-256 verified before publication."
